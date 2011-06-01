@@ -3,4 +3,4 @@
 
 = Design =
 
-<img src="http://sp-monopoly.googlecode.com/svn/trunk/design.png"></img>
+<img src="http://sp-monopoly.googlecode.com/svn/wiki/design.png"></img>
