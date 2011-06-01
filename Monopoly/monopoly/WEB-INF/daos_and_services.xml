@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<import resource="h2.xml" />
+
+	<tx:annotation-driven />
+
+	<!-- transactionManager -->
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+		autowire="byName" /> <!--sessionFactory will get autowired -->
+
+	<!-- persistenceManager -->
+
+	<bean id="persistenceManager" class="com.iiiss.spring.hibernate.HibernatePM"
+		autowire="byName" /> <!--sessionFactory will get autowired -->
+
+	<!-- Daos -->
+
+	<bean id="userDao" class="monopoly.impl.daos.UserDao"
+		autowire="byName" /> <!--persistenceManager will get autowired -->
+
+	<!-- Services -->
+
+	<bean id="userService" class="monopoly.impl.services.UserService"
+		autowire="byName" /> <!--userDao will get autowired -->
+
+</beans>
