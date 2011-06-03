@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <!-- fds\rpc\HttpServiceInAS.mxml. Compiles --> 
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
-		verticalGap="10"
-		creationComplete="useHttpService(null);">
+		creationComplete="main()">
 
 <mx:Script>
 	<![CDATA[
@@ -13,11 +12,14 @@
 		
 		private var service:HTTPService 
 
+		public function main():void
+		{
+		}
+
 		public function useHttpService(parameters:Object):void
 		{
 			service = new HTTPService();
 			service.url = "http://175.186.33.40:8080/monopoly/random";
-			//service.destination = "sampleDestination";
 		        service.method = "GET";
 			service.addEventListener("result", httpResult);
 	                service.addEventListener("fault", httpFault);
@@ -27,8 +29,39 @@
 		public function httpResult(event:ResultEvent):void
 		{
 			var result:Object = event.result;
-			var number:String = result.number;
-			Alert.show(number);
+			var number:int = parseInt(result.number);
+			var rest:int = 0;
+
+			if (p1.y == 0)
+			{
+				rest = (400 - p1.x) / 40;
+				if (number > rest)
+				{
+					rest = number - rest;
+					p1.x = 400;
+					p1.y += rest * 40;
+				}
+				else
+				{
+					p1.x += number * 40;
+				}
+			}
+			else if (p1.x == 400)
+			{
+				rest = (400 - p1.y) / 40;
+				if (number > rest)
+				{
+					rest = number - rest;
+					p1.y = 400;
+					p1.x = 440 - rest *40;
+				}
+				else
+				{
+					p1.y += number *40;
+				}
+			}
+
+			Alert.show(number + ". Buy");
 		}
 
 		public function httpFault(event:FaultEvent):void
@@ -39,6 +72,17 @@
         ]]>
 </mx:Script>
 
+<mx:Canvas
+	width="440"
+	height="440">
+	<mx:Image id="map" source="pic.jpg" width="100%" height="100%" x="0" y="0">
+	</mx:Image>
+
+	<mx:Image id="p1" source="fd.gif" width="40" height="40" x="0" y="0">
+	</mx:Image>
+</mx:Canvas>
+
+<mx:Button id="go" label="Go" click="useHttpService(null);"/>
 
 
 </mx:Application>
