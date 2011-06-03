@@ -1,8 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?> 
-<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
-                       xmlns:s="library://ns.adobe.com/flex/spark" 
-                       xmlns:mx="library://ns.adobe.com/flex/mx" 
-                       title="Hello World"> 
+<?xml version="1.0"?>
+<!-- fds\rpc\HttpServiceInAS.mxml. Compiles --> 
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+		verticalGap="10"
+		creationComplete="useHttpService(null);">
 
-	<s:Label text="Hello World From Adobe AIR" horizontalCenter="0" verticalCenter="0"/> 
-</s:WindowedApplication>
+<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;
+		import mx.rpc.http.HTTPService;
+		import mx.rpc.events.ResultEvent;
+		import mx.rpc.events.FaultEvent;
+		
+		private var service:HTTPService 
+
+		public function useHttpService(parameters:Object):void
+		{
+			service = new HTTPService();
+			service.url = "http://175.186.33.40:8080/monopoly/random";
+			//service.destination = "sampleDestination";
+		        service.method = "GET";
+			service.addEventListener("result", httpResult);
+	                service.addEventListener("fault", httpFault);
+		        service.send(parameters);
+		}
+
+		public function httpResult(event:ResultEvent):void
+		{
+			var result:Object = event.result;
+			var number:String = result.number;
+			Alert.show(number);
+		}
+
+		public function httpFault(event:FaultEvent):void
+		{
+			var faultstring:String = event.fault.faultString;
+			Alert.show(faultstring);
+		}
+        ]]>
+</mx:Script>
+
+
+
+</mx:Application>
+
