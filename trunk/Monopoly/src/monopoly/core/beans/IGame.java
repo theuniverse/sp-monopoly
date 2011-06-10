@@ -6,6 +6,9 @@ import com.iiiss.spring.common.IBean;
 
 public interface IGame extends IBean
 {
+	public boolean isStarted();
+
+	public void setStarted(boolean isStarted);
 
 	public IHost getHost();
 
@@ -15,4 +18,7 @@ public interface IGame extends IBean
 
 	public void setPlayers(List<IPlayer> players);
 
+	public IPlayer getCurrentPlayer();
+
+	public void setCurrentPlayer(IPlayer currentPlayer);
 }

@@ -1,7 +1,9 @@
 package monopoly.impl.daos;
 
 import monopoly.core.beans.IEventQueue;
+import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
+import monopoly.core.beans.event.ICastDie;
 import monopoly.core.beans.event.IEvent;
 import monopoly.core.daos.IEventDao;
 
@@ -30,9 +32,13 @@ public class EventDao extends BaseDao implements IEventDao
 		return event;
 	}
 
-	public void emptyEventQueue(IEventQueue eventQueue)
+	public ICastDie createCastDieEvent(IEventQueue eventQueue, IPlayer player)
 	{
-		eventQueue.getEvents().clear();
+		ICastDie event = (ICastDie) persistenceManager.newObject(CAST_DIE_BEAN);
+		event.setEventQueue(eventQueue);
+		eventQueue.getEvents().add(event);
+		event.setPlayer(player);
+		return event;
 	}
 
 }
