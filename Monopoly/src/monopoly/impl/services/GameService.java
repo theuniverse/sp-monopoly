@@ -3,10 +3,12 @@ package monopoly.impl.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import monopoly.core.beans.IEventQueue;
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
 import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
+import monopoly.core.daos.IEventDao;
 import monopoly.core.daos.IGameDao;
 import monopoly.core.daos.IUserDao;
 import monopoly.core.services.IGameService;
@@ -19,6 +21,9 @@ public class GameService implements IGameService
 	@Autowired
 	private IUserDao userDao;
 
+	@Autowired
+	private IEventDao eventDao;
+
 	public void setGameDao(IGameDao gameDao)
 	{
 		this.gameDao = gameDao;
@@ -27,6 +32,11 @@ public class GameService implements IGameService
 	public void setUserDao(IUserDao userDao)
 	{
 		this.userDao = userDao;
+	}
+
+	public void setEventDao(IEventDao eventDao)
+	{
+		this.eventDao = eventDao;
 	}
 
 	@Transactional
@@ -78,27 +88,28 @@ public class GameService implements IGameService
 		if (!user.equals(host.getUsers().get(0)))
 			return "Only host can start game";
 
-		if (host.isStarted())
-			return "Game already started";
-		host.setStarted(true);
-
 		IGame game = host.getGame();
 		if (game == null)
 			return "Unexpected error";
+
+		if (host.isStarted())
+			return "Game already started";
+		host.setStarted(true);
+		for (IUser iterator : host.getUsers())
+		{
+			IEventQueue eventQueue = eventDao.createEventQueue(iterator);
+			eventDao.createEvent(eventQueue, IEventDao.INIT_FETCH_BEAN);
+		}
 
 		String colors[] =
 		{ "RED", "BLUE", "YELLOW", "GREEN" };
 		for (int i = 0; i < host.getUsers().size(); i++)
 		{
 			IUser iterator = host.getUsers().get(i);
-			IPlayer player = gameDao.createPlayer();
+			IPlayer player = gameDao.createPlayer(iterator, game);
 			player.setCash(new Long(2000));
 			player.setColor(colors[i]);
 
-			iterator.setPlayer(player);
-			player.setUser(iterator);
-			game.getPlayers().add(player);
-			player.setGame(game);
 		}
 
 		return null;

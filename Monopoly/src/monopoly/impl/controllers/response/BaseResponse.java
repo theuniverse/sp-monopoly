@@ -21,9 +21,9 @@ public class BaseResponse
 	{
 		String ret = "";
 		for (ResponsePair pair : attributes)
-			ret += pair.getName() + ":" + pair.getValue() + "&&";
+			ret += pair.getName() + "=" + pair.getValue() + "&";
 		if (ret.length() > 0)
-			ret = ret.substring(0, ret.length() - 2);
+			ret = ret.substring(0, ret.length() - 1);
 		return ret;
 	}
 

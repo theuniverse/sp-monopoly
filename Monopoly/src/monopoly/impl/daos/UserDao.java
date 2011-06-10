@@ -8,18 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.iiiss.spring.common.BaseDao;
 
 @Transactional
-public class UserDao extends BaseDao implements IUserDao {
-	public static final String BEAN_NAME = "user";
-
-	public IUser createUser(String username, String password) {
-		IUser user = (IUser) persistenceManager.newObject(BEAN_NAME);
+public class UserDao extends BaseDao implements IUserDao
+{
+	public IUser createUser(String username, String password)
+	{
+		IUser user = (IUser) persistenceManager.newObject(USER_BEAN);
 		user.setUsername(username);
 		user.setPassword(password);
 		return user;
 	}
 
-	public IUser getUserByUsername(String username) {
-		return persistenceManager.getObject(BEAN_NAME, "where username = '"
+	public IUser getUserByUsername(String username)
+	{
+		return persistenceManager.getObject(USER_BEAN, "where username = '"
 				+ username + "'");
 	}
 }

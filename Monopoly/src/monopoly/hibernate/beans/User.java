@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import monopoly.core.beans.IEventQueue;
 import monopoly.core.beans.IHost;
 import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
@@ -25,6 +26,9 @@ public class User extends BaseBean implements IUser
 
 	@OneToOne(targetEntity = Player.class)
 	private IPlayer player;
+
+	@OneToOne(targetEntity = EventQueue.class)
+	private IEventQueue eventQueue;
 
 	public String getUsername()
 	{
@@ -65,4 +69,15 @@ public class User extends BaseBean implements IUser
 	{
 		this.player = player;
 	}
+
+	public IEventQueue getEventQueue()
+	{
+		return eventQueue;
+	}
+
+	public void setEventQueue(IEventQueue eventQueue)
+	{
+		this.eventQueue = eventQueue;
+	}
+
 }
