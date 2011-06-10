@@ -2,7 +2,8 @@ package monopoly.core.beans;
 
 import com.iiiss.spring.common.IBean;
 
-public interface IUser extends IBean {
+public interface IUser extends IBean
+{
 
 	public String getUsername();
 
@@ -12,4 +13,7 @@ public interface IUser extends IBean {
 
 	public void setPassword(String password);
 
+	public IHost getHost();
+
+	public void setHost(IHost host);
 }
