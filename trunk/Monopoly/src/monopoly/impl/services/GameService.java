@@ -28,7 +28,7 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public IHost create(String username, String password)
+	public IHost create(String username)
 	{
 		IUser user = userDao.getUserByUsername(username);
 
@@ -39,6 +39,30 @@ public class GameService implements IGameService
 		host.getUsers().add(user);
 		user.setHost(host);
 		return host;
+	}
+
+	@Transactional
+	public String join(String username, Long hostid)
+	{
+		IUser user = userDao.getUserByUsername(username);
+
+		if (user == null)
+			return "Unexpected error";
+
+		IHost host = gameDao.getHostByKey(hostid);
+
+		if (host == null)
+			return "Failed to find target host";
+
+		if (host.getUsers().contains(user))
+			return "User already in host";
+
+		if (host.getUsers().size() >= 4)
+			return "Host full";
+
+		host.getUsers().add(user);
+		user.setHost(host);
+		return null;
 	}
 
 }

@@ -29,4 +29,10 @@ public class GameDao extends BaseDao implements IGameDao
 		return host;
 	}
 
+	public IHost getHostByKey(Long key)
+	{
+		IHost host = (IHost) persistenceManager.getObject(HOST_BEAN, key);
+		return host;
+	}
+
 }

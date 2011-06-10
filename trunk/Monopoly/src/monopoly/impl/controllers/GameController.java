@@ -30,7 +30,7 @@ public class GameController extends BaseController
 			return ERROR_PAGE;
 		}
 
-		IHost host = gameService.create(username, password);
+		IHost host = gameService.create(username);
 
 		if (host == null)
 		{
@@ -47,14 +47,24 @@ public class GameController extends BaseController
 	@RequestMapping(value = "/game/join")
 	public String join(@RequestParam("username") String username,
 			@RequestParam("password") String password,
-			@RequestParam("hostid") int hostid, Model model)
+			@RequestParam("hostid") Long hostid, Model model)
 	{
 		if (!userService.login(username, password))
 		{
 			model.addAttribute("message", AUTH_FAIL);
 			return ERROR_PAGE;
 		}
-		
+
+		String r = gameService.join(username, hostid);
+		if (r != null)
+		{
+			model.addAttribute("message", r);
+			return ERROR_PAGE;
+		}
+
+		BaseResponse result = new BaseResponse();
+		result.put("message", "Join host succeeds");
+		model.addAttribute("result", result);
 		return RESULT_PAGE;
 	}
 
