@@ -33,16 +33,20 @@ import com.iiiss.spring.common.IPersistenceManager;
  */
 @Transactional
 public class HibernatePM extends HibernateDaoSupport implements
-		IPersistenceManager {
+		IPersistenceManager
+{
 	private ApplicationContext context = new ClassPathXmlApplicationContext(
 			"/monopoly/hibernate/beans/beans.xml");
 
-	@SuppressWarnings("unchecked")
-	private Class getImplClass(String beanName) {
+	@SuppressWarnings(
+	{ "rawtypes" })
+	private Class getImplClass(String beanName)
+	{
 		return context.getBean(beanName).getClass();
 	}
 
-	public IBean newObject(String beanName) {
+	public IBean newObject(String beanName)
+	{
 		// scope="prototype"
 		IBean bean = (IBean) context.getBean(beanName);
 		getHibernateTemplate().persist(bean);
@@ -50,23 +54,27 @@ public class HibernatePM extends HibernateDaoSupport implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IBean> T getObject(String beanName, long id) {
+	public <T extends IBean> T getObject(String beanName, long id)
+	{
 		return (T) getHibernateTemplate().get(getImplClass(beanName), id);
 	}
 
-	public <T extends IBean> T getObject(String beanName, String query) {
+	public <T extends IBean> T getObject(String beanName, String query)
+	{
 		List<T> objectList = getObjects(beanName, query);
 		return objectList.isEmpty() ? null : objectList.get(0);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IBean> List<T> getObjects(String beanName, String query) {
+	public <T extends IBean> List<T> getObjects(String beanName, String query)
+	{
 		query = query == null ? "" : query;
 		return getHibernateTemplate().find(
 				"from " + getImplClass(beanName).getName() + " " + query);
 	}
 
-	public void deteleObject(IBean object) {
+	public void deteleObject(IBean object)
+	{
 		getHibernateTemplate().delete(object);
 	}
 }
