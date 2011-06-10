@@ -68,4 +68,28 @@ public class GameController extends BaseController
 		return RESULT_PAGE;
 	}
 
+	@RequestMapping(value = "/game/start")
+	public String start(@RequestParam("username") String username,
+			@RequestParam("password") String password,
+			@RequestParam("hostid") Long hostid, Model model)
+	{
+		if (!userService.login(username, password))
+		{
+			model.addAttribute("message", AUTH_FAIL);
+			return ERROR_PAGE;
+		}
+
+		String r = gameService.start(username, hostid);
+		if (r != null)
+		{
+			model.addAttribute("message", r);
+			return ERROR_PAGE;
+		}
+
+		BaseResponse result = new BaseResponse();
+		result.put("message", "Game begins now");
+		model.addAttribute("result", result);
+		return RESULT_PAGE;
+	}
+
 }

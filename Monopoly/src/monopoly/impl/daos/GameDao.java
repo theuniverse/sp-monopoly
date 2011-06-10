@@ -6,6 +6,7 @@ import com.iiiss.spring.common.BaseDao;
 
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
+import monopoly.core.beans.IPlayer;
 import monopoly.core.daos.IGameDao;
 
 @Transactional
@@ -13,6 +14,7 @@ public class GameDao extends BaseDao implements IGameDao
 {
 	public static final String GAME_BEAN = "game";
 	public static final String HOST_BEAN = "host";
+	public static final String PLAYER_BEAN = "player";
 
 	private IGame createGame()
 	{
@@ -27,6 +29,12 @@ public class GameDao extends BaseDao implements IGameDao
 		host.setGame(game);
 		game.setHost(host);
 		return host;
+	}
+
+	public IPlayer createPlayer()
+	{
+		IPlayer player = (IPlayer) persistenceManager.newObject(PLAYER_BEAN);
+		return player;
 	}
 
 	public IHost getHostByKey(Long key)

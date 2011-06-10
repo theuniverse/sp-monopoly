@@ -3,7 +3,9 @@ package monopoly.impl.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
+import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
 import monopoly.core.daos.IGameDao;
 import monopoly.core.daos.IUserDao;
@@ -31,7 +33,6 @@ public class GameService implements IGameService
 	public IHost create(String username)
 	{
 		IUser user = userDao.getUserByUsername(username);
-
 		if (user == null)
 			return null;
 
@@ -45,12 +46,10 @@ public class GameService implements IGameService
 	public String join(String username, Long hostid)
 	{
 		IUser user = userDao.getUserByUsername(username);
-
 		if (user == null)
 			return "Unexpected error";
 
 		IHost host = gameDao.getHostByKey(hostid);
-
 		if (host == null)
 			return "Failed to find target host";
 
@@ -62,6 +61,46 @@ public class GameService implements IGameService
 
 		host.getUsers().add(user);
 		user.setHost(host);
+		return null;
+	}
+
+	@Transactional
+	public String start(String username, Long hostid)
+	{
+		IUser user = userDao.getUserByUsername(username);
+		if (user == null)
+			return "Unexpected error";
+
+		IHost host = gameDao.getHostByKey(hostid);
+		if (host == null)
+			return "Failed to find target host";
+
+		if (!user.equals(host.getUsers().get(0)))
+			return "Only host can start game";
+
+		if (host.isStarted())
+			return "Game already started";
+		host.setStarted(true);
+
+		IGame game = host.getGame();
+		if (game == null)
+			return "Unexpected error";
+
+		String colors[] =
+		{ "RED", "BLUE", "YELLOW", "GREEN" };
+		for (int i = 0; i < host.getUsers().size(); i++)
+		{
+			IUser iterator = host.getUsers().get(i);
+			IPlayer player = gameDao.createPlayer();
+			player.setCash(new Long(2000));
+			player.setColor(colors[i]);
+
+			iterator.setPlayer(player);
+			player.setUser(iterator);
+			game.getPlayers().add(player);
+			player.setGame(game);
+		}
+
 		return null;
 	}
 
