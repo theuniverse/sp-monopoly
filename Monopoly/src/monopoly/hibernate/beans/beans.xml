@@ -4,5 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="user" class="monopoly.hibernate.beans.User" scope="prototype" />
+	<bean id="host" class="monopoly.hibernate.beans.Host" scope="prototype" />
+	<bean id="game" class="monopoly.hibernate.beans.Game" scope="prototype" />
 
 </beans>
