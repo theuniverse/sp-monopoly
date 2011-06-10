@@ -8,50 +8,54 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
-public class UserController {
-	public static final String RESULT_PAGE = "result";
-
+public class UserController extends BaseController
+{
 	@Autowired
 	private IUserService userSerivce;
 
 	@RequestMapping(value = "/user/register")
 	public String register(@RequestParam("username") String username,
-			@RequestParam("password") String password, Model model) {
-		if (username == null || password == null) {
+			@RequestParam("password") String password, Model model)
+	{
+		if (username == null || password == null)
+		{
 			model.addAttribute("message",
 					"Username or Password is not specified.");
-			return RESULT_PAGE;
+			return ERROR_PAGE;
 		}
 
 		boolean isSucceed = userSerivce.register(username, password);
-		if (!isSucceed) {
-			model.addAttribute("message", "Username already exists.");
-			return RESULT_PAGE;
+		if (!isSucceed)
+		{
+			model.addAttribute("message", "User already exists");
+			return ERROR_PAGE;
 		}
 
-		model.addAttribute("username", username);
-		model.addAttribute("password", password);
+		result.put("message", "Registration succeeds");
+		model.addAttribute("result", result);
 		return RESULT_PAGE;
 	}
 
 	@RequestMapping(value = "/user/login")
 	public String login(@RequestParam("username") String username,
-			@RequestParam("password") String password, Model model) {
-		if (username == null || password == null) {
+			@RequestParam("password") String password, Model model)
+	{
+		if (username == null || password == null)
+		{
 			model.addAttribute("message", "Username or Password is empty.");
-			return RESULT_PAGE;
+			return ERROR_PAGE;
 		}
 
 		boolean isSucceed = userSerivce.login(username, password);
-		if (!isSucceed) {
+		if (!isSucceed)
+		{
 			model.addAttribute("message", "Authentication failed.");
-			return RESULT_PAGE;
+			return ERROR_PAGE;
 		}
 
-		model.addAttribute("username", username);
-		model.addAttribute("password", password);
+		result.put("message", "Login succeeds");
+		model.addAttribute("result", result);
 		return RESULT_PAGE;
 	}
 }
