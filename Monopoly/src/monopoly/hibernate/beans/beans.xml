@@ -11,5 +11,9 @@
 		scope="prototype" />
 	<bean id="initFetch" class="monopoly.hibernate.beans.event.InitFetch"
 		scope="prototype" />
+	<bean id="gameStart" class="monopoly.hibernate.beans.event.GameStart"
+		scope="prototype" />
+	<bean id="castDie" class="monopoly.hibernate.beans.event.CastDie"
+		scope="prototype" />
 
 </beans>

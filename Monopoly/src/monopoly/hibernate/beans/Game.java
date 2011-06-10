@@ -3,6 +3,7 @@ package monopoly.hibernate.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -17,12 +18,28 @@ import com.iiiss.spring.common.BaseBean;
 @Entity
 public class Game extends BaseBean implements IGame
 {
+	@Basic
+	private boolean isStarted = false;
+
 	@OneToOne(targetEntity = Host.class, cascade =
 	{ CascadeType.ALL })
 	private IHost host;
 
 	@OneToMany(targetEntity = Player.class, mappedBy = "game")
 	private List<IPlayer> players = new ArrayList<IPlayer>();
+
+	@OneToOne(targetEntity = Player.class)
+	private IPlayer currentPlayer;
+
+	public boolean isStarted()
+	{
+		return isStarted;
+	}
+
+	public void setStarted(boolean isStarted)
+	{
+		this.isStarted = isStarted;
+	}
 
 	public IHost getHost()
 	{
@@ -42,6 +59,16 @@ public class Game extends BaseBean implements IGame
 	public void setPlayers(List<IPlayer> players)
 	{
 		this.players = players;
+	}
+
+	public IPlayer getCurrentPlayer()
+	{
+		return currentPlayer;
+	}
+
+	public void setCurrentPlayer(IPlayer currentPlayer)
+	{
+		this.currentPlayer = currentPlayer;
 	}
 
 }

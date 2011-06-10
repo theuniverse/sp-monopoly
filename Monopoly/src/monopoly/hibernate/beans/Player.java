@@ -21,6 +21,9 @@ public class Player extends BaseBean implements IPlayer
 	@Basic
 	private Long cash;
 
+	@Basic
+	private boolean isInitialized = false;
+
 	@ManyToOne(targetEntity = Game.class, cascade =
 	{ CascadeType.ALL })
 	private IGame game;
@@ -67,6 +70,16 @@ public class Player extends BaseBean implements IPlayer
 	public void setUser(IUser user)
 	{
 		this.user = user;
+	}
+
+	public boolean isInitialized()
+	{
+		return isInitialized;
+	}
+
+	public void setInitialized(boolean isInitialized)
+	{
+		this.isInitialized = isInitialized;
 	}
 
 }

@@ -4,7 +4,6 @@ import com.iiiss.spring.common.IBean;
 
 public interface IPlayer extends IBean
 {
-
 	public String getColor();
 
 	public void setColor(String color);
@@ -20,5 +19,9 @@ public interface IPlayer extends IBean
 	public IUser getUser();
 
 	public void setUser(IUser user);
+
+	public boolean isInitialized();
+
+	public void setInitialized(boolean isInitialized);
 
 }

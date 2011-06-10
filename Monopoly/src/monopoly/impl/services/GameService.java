@@ -115,4 +115,64 @@ public class GameService implements IGameService
 		return null;
 	}
 
+	@Transactional
+	public boolean checkUser(String username, String password)
+	{
+		IUser user = userDao.getUserByUsername(username);
+		if (user == null)
+			return false;
+
+		if (user.getHost() == null)
+			return false;
+
+		IHost host = user.getHost();
+		if (host == null)
+			return false;
+
+		if (!host.isStarted())
+			return false;
+
+		if (host.getGame() == null)
+			return false;
+
+		if (host.getGame().isStarted())
+			return false;
+
+		for (IUser iterator : host.getUsers())
+			if (user == iterator)
+				return true;
+
+		return false;
+	}
+
+	@Transactional
+	public IGame initFetch(String username)
+	{
+		IUser user = userDao.getUserByUsername(username);
+		IHost host = user.getHost();
+		IGame game = host.getGame();
+		IPlayer player = user.getPlayer();
+
+		player.setInitialized(true);
+		boolean allReady = true;
+		for (IPlayer p : game.getPlayers())
+			if (!p.isInitialized())
+				allReady = false;
+
+		if (allReady)
+		{
+			game.setStarted(true);
+			game.setCurrentPlayer(game.getPlayers().get(0));
+			for (IUser u : host.getUsers())
+			{
+				eventDao.createEvent(u.getEventQueue(),
+						IEventDao.GAME_START_BEAN);
+				eventDao.createCastDieEvent(u.getEventQueue(), game
+						.getPlayers().get(0));
+			}
+		}
+
+		return game;
+	}
+
 }
