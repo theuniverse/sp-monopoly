@@ -7,5 +7,9 @@
 	<bean id="host" class="monopoly.hibernate.beans.Host" scope="prototype" />
 	<bean id="game" class="monopoly.hibernate.beans.Game" scope="prototype" />
 	<bean id="player" class="monopoly.hibernate.beans.Player" scope="prototype" />
+	<bean id="eventQueue" class="monopoly.hibernate.beans.EventQueue"
+		scope="prototype" />
+	<bean id="initFetch" class="monopoly.hibernate.beans.event.InitFetch"
+		scope="prototype" />
 
 </beans>

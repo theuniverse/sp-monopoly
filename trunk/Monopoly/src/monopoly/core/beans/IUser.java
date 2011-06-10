@@ -19,4 +19,8 @@ public interface IUser extends IBean
 	public IPlayer getPlayer();
 
 	public void setPlayer(IPlayer player);
+
+	public IEventQueue getEventQueue();
+
+	public void setEventQueue(IEventQueue eventQueue);
 }

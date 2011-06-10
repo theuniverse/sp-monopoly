@@ -25,12 +25,17 @@
 
 	<bean id="gameDao" class="monopoly.impl.daos.GameDao" autowire="byName" /> <!--persistenceManager will get autowired -->
 
+	<bean id="eventDao" class="monopoly.impl.daos.EventDao" autowire="byName" /> <!--persistenceManager will get autowired -->
+
 	<!-- Services -->
 
 	<bean id="userService" class="monopoly.impl.services.UserService"
 		autowire="byName" /> <!--userDao will get autowired -->
 
 	<bean id="gameService" class="monopoly.impl.services.GameService"
+		autowire="byName" /> <!--userDao will get autowired -->
+
+	<bean id="eventService" class="monopoly.impl.services.EventService"
 		autowire="byName" /> <!--userDao will get autowired -->
 
 </beans>
