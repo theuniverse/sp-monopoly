@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class GameController extends BaseController
+public class HostController extends BaseController
 {
 	@Autowired
 	private IUserService userService;
@@ -20,7 +20,7 @@ public class GameController extends BaseController
 	@Autowired
 	private IGameService gameService;
 
-	@RequestMapping(value = "/game/create")
+	@RequestMapping(value = "/host/create")
 	public String create(@RequestParam("username") String username,
 			@RequestParam("password") String password, Model model)
 	{
@@ -44,7 +44,7 @@ public class GameController extends BaseController
 		return RESULT_PAGE;
 	}
 
-	@RequestMapping(value = "/game/join")
+	@RequestMapping(value = "/host/join")
 	public String join(@RequestParam("username") String username,
 			@RequestParam("password") String password,
 			@RequestParam("hostid") Long hostid, Model model)
@@ -68,7 +68,7 @@ public class GameController extends BaseController
 		return RESULT_PAGE;
 	}
 
-	@RequestMapping(value = "/game/start")
+	@RequestMapping(value = "/host/start")
 	public String start(@RequestParam("username") String username,
 			@RequestParam("password") String password,
 			@RequestParam("hostid") Long hostid, Model model)
