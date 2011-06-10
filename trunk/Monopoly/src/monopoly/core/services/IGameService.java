@@ -7,4 +7,6 @@ public interface IGameService
 	public IHost create(String username);
 
 	public String join(String username, Long hostid);
+
+	public String start(String username, Long hostid);
 }

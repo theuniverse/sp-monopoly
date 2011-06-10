@@ -3,6 +3,7 @@ package monopoly.hibernate.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -22,6 +23,9 @@ public class Host extends BaseBean implements IHost
 	@OneToMany(targetEntity = User.class, mappedBy = "host")
 	private List<IUser> users = new ArrayList<IUser>();
 
+	@Basic
+	boolean isStarted = false;
+
 	public IGame getGame()
 	{
 		return game;
@@ -40,6 +44,16 @@ public class Host extends BaseBean implements IHost
 	public void setUsers(List<IUser> users)
 	{
 		this.users = users;
+	}
+
+	public boolean isStarted()
+	{
+		return isStarted;
+	}
+
+	public void setStarted(boolean isStarted)
+	{
+		this.isStarted = isStarted;
 	}
 
 }

@@ -15,4 +15,7 @@ public interface IHost extends IBean
 
 	public void setUsers(List<IUser> users);
 
+	public boolean isStarted();
+
+	public void setStarted(boolean isStarted);
 }

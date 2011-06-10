@@ -3,8 +3,10 @@ package monopoly.hibernate.beans;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import monopoly.core.beans.IHost;
+import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
 
 import com.iiiss.spring.common.BaseBean;
@@ -20,6 +22,9 @@ public class User extends BaseBean implements IUser
 
 	@ManyToOne(targetEntity = Host.class)
 	private IHost host;
+
+	@OneToOne(targetEntity = Player.class)
+	private IPlayer player;
 
 	public String getUsername()
 	{
@@ -49,5 +54,15 @@ public class User extends BaseBean implements IUser
 	public void setHost(IHost host)
 	{
 		this.host = host;
+	}
+
+	public IPlayer getPlayer()
+	{
+		return player;
+	}
+
+	public void setPlayer(IPlayer player)
+	{
+		this.player = player;
 	}
 }
