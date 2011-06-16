@@ -11,7 +11,13 @@ public interface IGameService
 
 	public String start(String username, Long hostid);
 
+	public boolean checkUserAtInitStage(String username, String password);
+
 	public boolean checkUser(String username, String password);
 
 	public IGame initFetch(String username);
+
+	public boolean checkCastDie(String username);
+
+	public int castDie(String username);
 }
