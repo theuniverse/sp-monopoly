@@ -1,6 +1,6 @@
 <%@ page language="java" pageEncoding="utf-8"
 	import="monopoly.impl.controllers.response.BaseResponse"
-	contentType="application/json; charset=utf-8"%>
+	contentType="application/text; charset=utf-8"%>
 <%
 	response.setStatus(403);
 

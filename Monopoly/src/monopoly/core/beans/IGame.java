@@ -2,6 +2,8 @@ package monopoly.core.beans;
 
 import java.util.List;
 
+import monopoly.core.beans.event.IEvent;
+
 import com.iiiss.spring.common.IBean;
 
 public interface IGame extends IBean
@@ -18,7 +20,11 @@ public interface IGame extends IBean
 
 	public void setPlayers(List<IPlayer> players);
 
-	public IPlayer getCurrentPlayer();
+	public IMap getMap();
 
-	public void setCurrentPlayer(IPlayer currentPlayer);
+	public void setMap(IMap map);
+
+	public List<IEvent> getEvents();
+
+	public void setEvents(List<IEvent> events);
 }

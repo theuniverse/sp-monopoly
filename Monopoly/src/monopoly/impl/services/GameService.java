@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import monopoly.core.beans.IEventQueue;
+import monopoly.core.beans.IField;
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
 import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
+import monopoly.core.beans.event.ICastDie;
+import monopoly.core.beans.event.IEvent;
 import monopoly.core.daos.IEventDao;
 import monopoly.core.daos.IGameDao;
 import monopoly.core.daos.IUserDao;
@@ -109,14 +112,15 @@ public class GameService implements IGameService
 			IPlayer player = gameDao.createPlayer(iterator, game);
 			player.setCash(new Long(2000));
 			player.setColor(colors[i]);
-
 		}
+
+		gameDao.createMap(game);
 
 		return null;
 	}
 
 	@Transactional
-	public boolean checkUser(String username, String password)
+	public boolean checkUserAtInitStage(String username, String password)
 	{
 		IUser user = userDao.getUserByUsername(username);
 		if (user == null)
@@ -146,6 +150,36 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
+	public boolean checkUser(String username, String password)
+	{
+		IUser user = userDao.getUserByUsername(username);
+		if (user == null)
+			return false;
+
+		if (user.getHost() == null)
+			return false;
+
+		IHost host = user.getHost();
+		if (host == null)
+			return false;
+
+		if (!host.isStarted())
+			return false;
+
+		if (host.getGame() == null)
+			return false;
+
+		if (!host.getGame().isStarted())
+			return false;
+
+		for (IUser iterator : host.getUsers())
+			if (user == iterator)
+				return true;
+
+		return false;
+	}
+
+	@Transactional
 	public IGame initFetch(String username)
 	{
 		IUser user = userDao.getUserByUsername(username);
@@ -162,17 +196,46 @@ public class GameService implements IGameService
 		if (allReady)
 		{
 			game.setStarted(true);
-			game.setCurrentPlayer(game.getPlayers().get(0));
 			for (IUser u : host.getUsers())
-			{
 				eventDao.createEvent(u.getEventQueue(),
 						IEventDao.GAME_START_BEAN);
-				eventDao.createCastDieEvent(u.getEventQueue(), game
-						.getPlayers().get(0));
-			}
+			eventDao.createCastDieEvent(game, game.getPlayers().get(0));
 		}
 
 		return game;
 	}
 
+	@Transactional
+	public boolean checkCastDie(String username)
+	{
+		IPlayer player = userDao.getUserByUsername(username).getPlayer();
+		IGame game = player.getGame();
+		for (IEvent event : game.getEvents())
+			if (event instanceof ICastDie)
+				if (((ICastDie) event).getPlayer().getUser().getUsername()
+						.equals(username))
+					return true;
+		return false;
+	}
+
+	@Transactional
+	public int castDie(String username)
+	{
+		IPlayer player = userDao.getUserByUsername(username).getPlayer();
+		IGame game = player.getGame();
+
+		int step = (int) (Math.random() * 6) + 1;
+		player.getField().getPlayers().remove(player);
+		IField field = player.getField();
+		for (int i = 0; i < step; i++)
+			field = field.getNext();
+		field.getPlayers().add(player);
+		player.setField(field);
+
+		for (IPlayer p : game.getPlayers())
+			eventDao.createStepForwardEvent(p.getUser().getEventQueue(),
+					player, step);
+
+		return step;
+	}
 }

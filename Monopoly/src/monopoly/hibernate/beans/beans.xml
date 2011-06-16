@@ -7,6 +7,15 @@
 	<bean id="host" class="monopoly.hibernate.beans.Host" scope="prototype" />
 	<bean id="game" class="monopoly.hibernate.beans.Game" scope="prototype" />
 	<bean id="player" class="monopoly.hibernate.beans.Player" scope="prototype" />
+	<bean id="map" class="monopoly.hibernate.beans.Map" scope="prototype" />
+	<bean id="field" class="monopoly.hibernate.beans.Field" scope="prototype" />
+	<bean id="property" class="monopoly.hibernate.beans.Property"
+		scope="prototype" />
+	<bean id="startField" class="monopoly.hibernate.beans.StartField"
+		scope="prototype" />
+	<bean id="normalField" class="monopoly.hibernate.beans.NormalField"
+		scope="prototype" />
+
 	<bean id="eventQueue" class="monopoly.hibernate.beans.EventQueue"
 		scope="prototype" />
 	<bean id="initFetch" class="monopoly.hibernate.beans.event.InitFetch"
@@ -14,6 +23,8 @@
 	<bean id="gameStart" class="monopoly.hibernate.beans.event.GameStart"
 		scope="prototype" />
 	<bean id="castDie" class="monopoly.hibernate.beans.event.CastDie"
+		scope="prototype" />
+	<bean id="stepForward" class="monopoly.hibernate.beans.event.StepForward"
 		scope="prototype" />
 
 </beans>

@@ -11,7 +11,10 @@ import javax.persistence.OneToOne;
 
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
+import monopoly.core.beans.IMap;
 import monopoly.core.beans.IPlayer;
+import monopoly.core.beans.event.IEvent;
+import monopoly.hibernate.beans.event.Event;
 
 import com.iiiss.spring.common.BaseBean;
 
@@ -28,8 +31,11 @@ public class Game extends BaseBean implements IGame
 	@OneToMany(targetEntity = Player.class, mappedBy = "game")
 	private List<IPlayer> players = new ArrayList<IPlayer>();
 
-	@OneToOne(targetEntity = Player.class)
-	private IPlayer currentPlayer;
+	@OneToOne(targetEntity = Map.class)
+	private IMap map;
+
+	@OneToMany(targetEntity = Event.class)
+	private List<IEvent> events = new ArrayList<IEvent>();
 
 	public boolean isStarted()
 	{
@@ -61,14 +67,23 @@ public class Game extends BaseBean implements IGame
 		this.players = players;
 	}
 
-	public IPlayer getCurrentPlayer()
+	public IMap getMap()
 	{
-		return currentPlayer;
+		return map;
 	}
 
-	public void setCurrentPlayer(IPlayer currentPlayer)
+	public void setMap(IMap map)
 	{
-		this.currentPlayer = currentPlayer;
+		this.map = map;
 	}
 
+	public List<IEvent> getEvents()
+	{
+		return events;
+	}
+
+	public void setEvents(List<IEvent> events)
+	{
+		this.events = events;
+	}
 }
