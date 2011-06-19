@@ -1,5 +1,7 @@
 package monopoly.impl.controllers;
 
+import java.util.ArrayList;
+
 import monopoly.core.beans.IHost;
 import monopoly.core.services.IGameService;
 import monopoly.core.services.IUserService;
@@ -64,6 +66,36 @@ public class HostController extends BaseController
 
 		BaseResponse result = new BaseResponse();
 		result.put("message", "Join host succeeds");
+		model.addAttribute("result", result);
+		return RESULT_PAGE;
+	}
+	
+	@RequestMapping(value = "/host/list")
+	public String list(@RequestParam("username") String username,
+			@RequestParam("password") String password, Model model)
+	{
+		if (!userService.login(username, password))
+		{
+			model.addAttribute("message", AUTH_FAIL);
+			return ERROR_PAGE;
+		}
+
+		
+		ArrayList<IHost> hosts = gameService.list(username);
+		if (hosts == null)
+		{
+			model.addAttribute("message", "Failed to list hosts");
+			return ERROR_PAGE;
+		}
+
+		BaseResponse result = new BaseResponse();
+		String rstr = "[";
+		for(int i = 0;i<hosts.size();i++){
+			if(i != 0) rstr += ",";
+			rstr += hosts.get(i).getKey();
+		}
+		rstr += "]";
+		result.put("message", rstr);
 		model.addAttribute("result", result);
 		return RESULT_PAGE;
 	}
