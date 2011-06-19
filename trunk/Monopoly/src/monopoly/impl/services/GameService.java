@@ -1,5 +1,7 @@
 package monopoly.impl.services;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +55,18 @@ public class GameService implements IGameService
 		host.getUsers().add(user);
 		user.setHost(host);
 		return host;
+	}
+	
+	@Transactional
+	public ArrayList<IHost> list(String username)
+	{
+		IUser user = userDao.getUserByUsername(username);
+		if (user == null)
+			return null;
+
+		ArrayList<IHost> hosts = new ArrayList<IHost>();
+		hosts = gameDao.getHosts();
+		return hosts;
 	}
 
 	@Transactional

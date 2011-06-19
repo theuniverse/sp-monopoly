@@ -1,5 +1,7 @@
 package monopoly.core.daos;
 
+import java.util.ArrayList;
+
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
 import monopoly.core.beans.IMap;
@@ -24,6 +26,7 @@ public interface IGameDao
 	public IHost createHost();
 
 	public IHost getHostByKey(Long key);
+	public ArrayList<IHost> getHosts();
 
 	public IMap createMap(IGame game);
 

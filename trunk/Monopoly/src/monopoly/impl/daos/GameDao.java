@@ -1,5 +1,8 @@
 package monopoly.impl.daos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import com.iiiss.spring.common.BaseDao;
@@ -47,6 +50,18 @@ public class GameDao extends BaseDao implements IGameDao
 	{
 		IHost host = (IHost) persistenceManager.getObject(HOST_BEAN, key);
 		return host;
+	}
+	
+	public ArrayList<IHost> getHosts()
+	{
+		List<IHost> tempHosts = persistenceManager.getObjects(HOST_BEAN, "");
+		ArrayList<IHost> hosts = new ArrayList<IHost>();
+		if(tempHosts != null){
+			for(int i = 0;i< tempHosts.size();i++){
+				hosts.add(tempHosts.get(i));
+			}
+		}
+		return hosts;
 	}
 
 	private void push(IField field, IMap map)
