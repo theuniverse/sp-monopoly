@@ -3,34 +3,17 @@ package monopoly.hibernate.beans.event;
 import javax.persistence.Basic;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-
-import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.event.IStepForward;
-import monopoly.hibernate.beans.Player;
 
 @Entity
 @DiscriminatorValue("StepForward")
-public class StepForward extends Event implements IStepForward
+public class StepForward extends PlayerEvent implements IStepForward
 {
-	@ManyToOne(targetEntity = Player.class)
-	private IPlayer player;
-
 	@Basic
 	private int step;
 
 	{
 		this.setType(TYPE);
-	}
-
-	public IPlayer getPlayer()
-	{
-		return player;
-	}
-
-	public void setPlayer(IPlayer player)
-	{
-		this.player = player;
 	}
 
 	public int getStep()
@@ -45,7 +28,7 @@ public class StepForward extends Event implements IStepForward
 
 	public String toString()
 	{
-		return "'type':'" + TYPE + "';'player':'" + player.getColor()
+		return "'type':'" + TYPE + "';'player':'" + getPlayer().getColor()
 				+ "';'step:'" + step + "'";
 	}
 }

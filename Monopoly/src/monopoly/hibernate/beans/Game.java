@@ -37,6 +37,12 @@ public class Game extends BaseBean implements IGame
 	@OneToMany(targetEntity = Event.class)
 	private List<IEvent> events = new ArrayList<IEvent>();
 
+	@Basic
+	private int cashBonusPassingStart;
+
+	@OneToOne(targetEntity = Player.class)
+	private IPlayer currentPlayer;
+
 	public boolean isStarted()
 	{
 		return isStarted;
@@ -85,5 +91,25 @@ public class Game extends BaseBean implements IGame
 	public void setEvents(List<IEvent> events)
 	{
 		this.events = events;
+	}
+
+	public void setCashBonusPassingStart(int cashBonusPassingStart)
+	{
+		this.cashBonusPassingStart = cashBonusPassingStart;
+	}
+
+	public int getCashBonusPassingStart()
+	{
+		return cashBonusPassingStart;
+	}
+
+	public void setCurrentPlayer(IPlayer currentPlayer)
+	{
+		this.currentPlayer = currentPlayer;
+	}
+
+	public IPlayer getCurrentPlayer()
+	{
+		return currentPlayer;
 	}
 }

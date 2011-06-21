@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import monopoly.core.beans.IEventQueue;
 import monopoly.core.beans.IField;
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
+import monopoly.core.beans.INormalField;
 import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
-import monopoly.core.beans.event.ICastDie;
-import monopoly.core.beans.event.IEvent;
 import monopoly.core.daos.IEventDao;
 import monopoly.core.daos.IGameDao;
 import monopoly.core.daos.IUserDao;
@@ -113,10 +111,8 @@ public class GameService implements IGameService
 			return "Game already started";
 		host.setStarted(true);
 		for (IUser iterator : host.getUsers())
-		{
-			IEventQueue eventQueue = eventDao.createEventQueue(iterator);
-			eventDao.createEvent(eventQueue, IEventDao.INIT_FETCH_BEAN);
-		}
+			eventDao.createEventQueue(iterator);
+		eventDao.createInitFetchEvent(game);
 
 		String colors[] =
 		{ "RED", "BLUE", "YELLOW", "GREEN" };
@@ -127,6 +123,7 @@ public class GameService implements IGameService
 			player.setCash(new Long(2000));
 			player.setColor(colors[i]);
 		}
+		game.setCashBonusPassingStart(200);
 
 		gameDao.createMap(game);
 
@@ -210,26 +207,12 @@ public class GameService implements IGameService
 		if (allReady)
 		{
 			game.setStarted(true);
-			for (IUser u : host.getUsers())
-				eventDao.createEvent(u.getEventQueue(),
-						IEventDao.GAME_START_BEAN);
+			eventDao.createGameStartEvent(game);
 			eventDao.createCastDieEvent(game, game.getPlayers().get(0));
+			game.setCurrentPlayer(game.getPlayers().get(0));
 		}
 
 		return game;
-	}
-
-	@Transactional
-	public boolean checkCastDie(String username)
-	{
-		IPlayer player = userDao.getUserByUsername(username).getPlayer();
-		IGame game = player.getGame();
-		for (IEvent event : game.getEvents())
-			if (event instanceof ICastDie)
-				if (((ICastDie) event).getPlayer().getUser().getUsername()
-						.equals(username))
-					return true;
-		return false;
 	}
 
 	@Transactional
@@ -242,13 +225,30 @@ public class GameService implements IGameService
 		player.getField().getPlayers().remove(player);
 		IField field = player.getField();
 		for (int i = 0; i < step; i++)
+		{
 			field = field.getNext();
+			/* see if the player passes the start point */
+			if (field == game.getMap().getStartField())
+			{
+				player.setCash(player.getCash()
+						+ game.getCashBonusPassingStart());
+				eventDao.createCashBonusPassingStartEvent(game, player,
+						game.getCashBonusPassingStart());
+			}
+		}
 		field.getPlayers().add(player);
 		player.setField(field);
 
-		for (IPlayer p : game.getPlayers())
-			eventDao.createStepForwardEvent(p.getUser().getEventQueue(),
-					player, step);
+		eventDao.createStepForwardEvent(game, player, step);
+
+		/* see if it's gonna happen something */
+		if (field instanceof INormalField)
+		{
+			if (((INormalField) field).getProperty().getPlayer() != null)
+			{
+
+			}
+		}
 
 		return step;
 	}
