@@ -83,4 +83,104 @@ public class GameController extends BaseController
 		return RESULT_PAGE;
 	}
 
+	@RequestMapping(value = "/game/buyProperty")
+	public String buyProperty(@RequestParam("username") String username,
+			@RequestParam("password") String password,
+			@RequestParam("action") String action, Model model)
+	{
+		if (!checkUser(username, password, model))
+			return ERROR_PAGE;
+
+		if (!gameEventService.checkBuyProperty(username))
+		{
+			model.addAttribute("message",
+					"You are not able to buy property right now");
+			return ERROR_PAGE;
+		}
+
+		BaseResponse result = new BaseResponse();
+		gameEventService.checkNextPlayer(username);
+		if (action.equals("buy"))
+		{
+			if (!gameService.buyProperty(username))
+			{
+				model.addAttribute("message", "Not enough cash");
+				return ERROR_PAGE;
+			}
+			else
+			{
+				result.put("message", "You bought a property");
+				model.addAttribute("result", result);
+				return RESULT_PAGE;
+			}
+		}
+		else
+		{
+			result.put("message", "You did not buy a property");
+			model.addAttribute("result", result);
+			return RESULT_PAGE;
+		}
+	}
+
+	@RequestMapping(value = "/game/save")
+	public String save(@RequestParam("username") String username,
+			@RequestParam("password") String password,
+			@RequestParam("amount") Long amount, Model model)
+	{
+		if (!checkUser(username, password, model))
+			return ERROR_PAGE;
+
+		if (!gameEventService.checkBankService(username))
+		{
+			model.addAttribute("message",
+					"It's not time you save or withdraw money");
+			return ERROR_PAGE;
+		}
+
+		BaseResponse result = new BaseResponse();
+		gameEventService.checkNextPlayer(username);
+		if (gameService.save(username, amount))
+		{
+			result.put("message", "You saved " + amount);
+			model.addAttribute("result", result);
+			return RESULT_PAGE;
+		}
+		else
+		{
+			model.addAttribute("message", "Not enough cash");
+			return ERROR_PAGE;
+		}
+	}
+
+	@RequestMapping(value = "/game/withdraw")
+	public String withdraw(@RequestParam("username") String username,
+			@RequestParam("password") String password,
+			@RequestParam("amount") Long amount, Model model)
+	{
+		if (!checkUser(username, password, model))
+			return ERROR_PAGE;
+
+		if (!gameEventService.checkBankService(username))
+		{
+			model.addAttribute("message",
+					"It's not time you save or withdraw money");
+			return ERROR_PAGE;
+		}
+
+		BaseResponse result = new BaseResponse();
+		gameEventService.checkNextPlayer(username);
+		if (gameService.withdraw(username, amount))
+		{
+			result.put("message", "You withdrawed " + amount);
+			model.addAttribute("result", result);
+			return RESULT_PAGE;
+		}
+		else
+		{
+			model.addAttribute("message", "Not enough cash");
+			return ERROR_PAGE;
+		}
+
+	}
+
 }

@@ -2,6 +2,8 @@ package monopoly.core.beans;
 
 import java.util.List;
 
+import monopoly.core.beans.field.IField;
+
 import com.iiiss.spring.common.IBean;
 
 public interface IPlayer extends IBean
@@ -13,6 +15,10 @@ public interface IPlayer extends IBean
 	public Long getCash();
 
 	public void setCash(Long cash);
+
+	public Long getSaving();
+
+	public void setSaving(Long saving);
 
 	public IGame getGame();
 

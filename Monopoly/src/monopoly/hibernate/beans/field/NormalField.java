@@ -1,11 +1,12 @@
-package monopoly.hibernate.beans;
+package monopoly.hibernate.beans.field;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
-import monopoly.core.beans.INormalField;
 import monopoly.core.beans.IProperty;
+import monopoly.core.beans.field.INormalField;
+import monopoly.hibernate.beans.Property;
 
 @Entity
 @DiscriminatorValue("NormalField")

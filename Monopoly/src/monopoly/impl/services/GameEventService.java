@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IPlayer;
+import monopoly.core.beans.event.IBankServiceAsk;
+import monopoly.core.beans.event.IBuyPropertyAsk;
 import monopoly.core.beans.event.ICastDie;
 import monopoly.core.beans.event.IEvent;
 import monopoly.core.daos.IEventDao;
@@ -34,14 +36,16 @@ public class GameEventService implements IGameEventService
 	{
 		IPlayer player = userDao.getUserByUsername(username).getPlayer();
 		IGame game = player.getGame();
-		for (IEvent event : game.getEvents())
-			if (event instanceof ICastDie)
-				if (((ICastDie) event).getPlayer().getUser().getUsername()
-						.equals(username))
-				{
-					game.getEvents().remove(event);
-					return true;
-				}
+		if (game.getEvents().size() == 0)
+			return false;
+		IEvent event = game.getEvents().get(0);
+		if (event instanceof ICastDie)
+			if (((ICastDie) event).getPlayer().getUser().getUsername()
+					.equals(username))
+			{
+				game.getEvents().remove(event);
+				return true;
+			}
 		return false;
 	}
 
@@ -59,5 +63,42 @@ public class GameEventService implements IGameEventService
 			game.setCurrentPlayer(nextPlayer);
 			eventDao.createCastDieEvent(game, nextPlayer);
 		}
+	}
+
+	@Transactional
+	public boolean checkBuyProperty(String username)
+	{
+		IPlayer player = userDao.getUserByUsername(username).getPlayer();
+		IGame game = player.getGame();
+		if (game.getEvents().size() == 0)
+			return false;
+		IEvent event = game.getEvents().get(0);
+		if (event instanceof IBuyPropertyAsk)
+			if (((IBuyPropertyAsk) event).getPlayer().getUser().getUsername()
+					.equals(username))
+			{
+				game.getEvents().remove(event);
+				return true;
+			}
+		return false;
+	}
+
+	@Transactional
+	public boolean checkBankService(String username)
+	{
+		IPlayer player = userDao.getUserByUsername(username).getPlayer();
+		IGame game = player.getGame();
+		if (game.getEvents().size() == 0)
+			return false;
+		IEvent event = game.getEvents().get(0);
+		if (event instanceof IBankServiceAsk)
+			if (((IBankServiceAsk) event).getPlayer().getUser().getUsername()
+					.equals(username))
+			{
+				game.getEvents().remove(event);
+				return true;
+			}
+		return false;
+
 	}
 }

@@ -22,10 +22,12 @@ public interface IGameDao
 	public static final String BANK_FIELD_BEAN = "bankField";
 	public static final String JAIL_FIELD_BEAN = "jailField";
 	public static final String NEWS_FIELD_BEAN = "newsField";
+	public static final String RAILWAY_STATION_FIELD_BEAN = "railwayStationField";
 
 	public IHost createHost();
 
 	public IHost getHostByKey(Long key);
+
 	public ArrayList<IHost> getHosts();
 
 	public IMap createMap(IGame game);

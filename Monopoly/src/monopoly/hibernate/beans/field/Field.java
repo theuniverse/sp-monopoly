@@ -1,4 +1,4 @@
-package monopoly.hibernate.beans;
+package monopoly.hibernate.beans.field;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import monopoly.core.beans.IField;
 import monopoly.core.beans.IMap;
 import monopoly.core.beans.IPlayer;
+import monopoly.core.beans.field.IField;
+import monopoly.hibernate.beans.Map;
+import monopoly.hibernate.beans.Player;
 
 import com.iiiss.spring.common.BaseBean;
 

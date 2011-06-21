@@ -7,15 +7,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.iiiss.spring.common.BaseDao;
 
-import monopoly.core.beans.IField;
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
 import monopoly.core.beans.IMap;
-import monopoly.core.beans.INormalField;
 import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IProperty;
-import monopoly.core.beans.IStartField;
 import monopoly.core.beans.IUser;
+import monopoly.core.beans.field.IBankField;
+import monopoly.core.beans.field.IField;
+import monopoly.core.beans.field.IJailField;
+import monopoly.core.beans.field.INewsField;
+import monopoly.core.beans.field.INormalField;
+import monopoly.core.beans.field.IRailwayStationField;
+import monopoly.core.beans.field.IStartField;
 import monopoly.core.daos.IGameDao;
 
 @Transactional
@@ -51,13 +55,15 @@ public class GameDao extends BaseDao implements IGameDao
 		IHost host = (IHost) persistenceManager.getObject(HOST_BEAN, key);
 		return host;
 	}
-	
+
 	public ArrayList<IHost> getHosts()
 	{
 		List<IHost> tempHosts = persistenceManager.getObjects(HOST_BEAN, "");
 		ArrayList<IHost> hosts = new ArrayList<IHost>();
-		if(tempHosts != null){
-			for(int i = 0;i< tempHosts.size();i++){
+		if (tempHosts != null)
+		{
+			for (int i = 0; i < tempHosts.size(); i++)
+			{
 				hosts.add(tempHosts.get(i));
 			}
 		}
@@ -82,6 +88,7 @@ public class GameDao extends BaseDao implements IGameDao
 				.newObject(NORMAL_FIELD_BEAN);
 		IProperty property = (IProperty) persistenceManager
 				.newObject(PROPERTY_BEAN);
+		property.setValue((long) ((Math.random() * 200) + 200));
 		normalField.setProperty(property);
 		property.setField(normalField);
 		return normalField;
@@ -102,6 +109,13 @@ public class GameDao extends BaseDao implements IGameDao
 		map.setStartField(startField);
 		map.getFields().add(startField);
 
+		IRailwayStationField railwayStation1 = (IRailwayStationField) persistenceManager
+				.newObject(RAILWAY_STATION_FIELD_BEAN);
+		IRailwayStationField railwayStation2 = (IRailwayStationField) persistenceManager
+				.newObject(RAILWAY_STATION_FIELD_BEAN);
+		railwayStation1.setNextStop(railwayStation2);
+		railwayStation2.setNextStop(railwayStation1);
+		push(railwayStation1, map);
 		push(createNormalField(), map);
 		push(createNormalField(), map);
 		push(createNormalField(), map);
@@ -110,6 +124,19 @@ public class GameDao extends BaseDao implements IGameDao
 		push(createNormalField(), map);
 		push(createNormalField(), map);
 		push(createNormalField(), map);
+		push(railwayStation2, map);
+
+		IBankField bankField = (IBankField) persistenceManager
+				.newObject(BANK_FIELD_BEAN);
+		push(bankField, map);
+
+		INewsField newsField = (INewsField) persistenceManager
+				.newObject(NEWS_FIELD_BEAN);
+		push(newsField, map);
+
+		IJailField jailField = (IJailField) persistenceManager
+				.newObject(JAIL_FIELD_BEAN);
+		push(jailField, map);
 
 		map.getStartField().getPlayers().addAll(game.getPlayers());
 		for (IPlayer player : game.getPlayers())

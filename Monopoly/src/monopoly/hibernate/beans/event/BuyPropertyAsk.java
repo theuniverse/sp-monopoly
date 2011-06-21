@@ -4,18 +4,17 @@ import javax.persistence.Basic;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import monopoly.core.beans.event.IBuyProperty;
+import monopoly.core.beans.event.IBuyPropertyAsk;
 
 @Entity
-@DiscriminatorValue("BuyProperty")
-public class BuyProperty extends PlayerEvent implements IBuyProperty
+@DiscriminatorValue("BuyPropertyAsk")
+public class BuyPropertyAsk extends PlayerEvent implements IBuyPropertyAsk
 {
 	@Basic
 	private int field;
 
 	@Basic
 	private Long cost;
-
 	{
 		this.setType(TYPE);
 	}

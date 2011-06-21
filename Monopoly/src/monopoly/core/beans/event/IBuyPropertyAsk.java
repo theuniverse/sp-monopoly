@@ -1,8 +1,8 @@
 package monopoly.core.beans.event;
 
-public interface IBuyProperty extends IPlayerEvent
+public interface IBuyPropertyAsk extends IPlayerEvent
 {
-	public static final String TYPE = "buyproperty";
+	public static final String TYPE = "buypropertyask";
 
 	public int getField();
 

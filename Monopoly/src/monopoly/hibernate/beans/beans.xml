@@ -11,9 +11,19 @@
 	<bean id="field" class="monopoly.hibernate.beans.Field" scope="prototype" />
 	<bean id="property" class="monopoly.hibernate.beans.Property"
 		scope="prototype" />
-	<bean id="startField" class="monopoly.hibernate.beans.StartField"
+	<bean id="startField" class="monopoly.hibernate.beans.field.StartField"
 		scope="prototype" />
-	<bean id="normalField" class="monopoly.hibernate.beans.NormalField"
+	<bean id="normalField" class="monopoly.hibernate.beans.field.NormalField"
+		scope="prototype" />
+	<bean id="bankField" class="monopoly.hibernate.beans.field.BankField"
+		scope="prototype" />
+	<bean id="newsField" class="monopoly.hibernate.beans.field.NewsField"
+		scope="prototype" />
+	<bean id="parkField" class="monopoly.hibernate.beans.field.ParkField"
+		scope="prototype" />
+	<bean id="jailField" class="monopoly.hibernate.beans.field.JailField"
+		scope="prototype" />
+	<bean id="railwayStationField" class="monopoly.hibernate.beans.field.RailwayStationField"
 		scope="prototype" />
 
 	<bean id="eventQueue" class="monopoly.hibernate.beans.EventQueue"
@@ -28,7 +38,17 @@
 		scope="prototype" />
 	<bean id="cashBonusPassingStart" class="monopoly.hibernate.beans.event.CashBonusPassingStart"
 		scope="prototype" />
+	<bean id="buyPropertyAsk" class="monopoly.hibernate.beans.event.BuyPropertyAsk"
+		scope="prototype" />
 	<bean id="buyProperty" class="monopoly.hibernate.beans.event.BuyProperty"
+		scope="prototype" />
+	<bean id="payTax" class="monopoly.hibernate.beans.event.PayTax"
+		scope="prototype" />
+	<bean id="bankServiceAsk" class="monopoly.hibernate.beans.event.BankServiceAsk"
+		scope="prototype" />
+	<bean id="bankServiceSave" class="monopoly.hibernate.beans.event.BankServiceSave"
+		scope="prototype" />
+	<bean id="bankServiceWithdraw" class="monopoly.hibernate.beans.event.BankServiceWithdraw"
 		scope="prototype" />
 
 </beans>
