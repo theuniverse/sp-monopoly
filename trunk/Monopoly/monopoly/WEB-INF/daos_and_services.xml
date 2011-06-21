@@ -29,13 +29,17 @@
 
 	<!-- Services -->
 
+	<!--daos will get autowired -->
 	<bean id="userService" class="monopoly.impl.services.UserService"
-		autowire="byName" /> <!--userDao will get autowired -->
+		autowire="byName" />
 
 	<bean id="gameService" class="monopoly.impl.services.GameService"
-		autowire="byName" /> <!--userDao will get autowired -->
+		autowire="byName" />
 
 	<bean id="eventService" class="monopoly.impl.services.EventService"
-		autowire="byName" /> <!--userDao will get autowired -->
+		autowire="byName" />
+
+	<bean id="gameEventService" class="monopoly.impl.services.GameEventService"
+		autowire="byName" />
 
 </beans>

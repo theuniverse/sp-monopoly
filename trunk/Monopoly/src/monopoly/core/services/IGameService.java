@@ -21,7 +21,5 @@ public interface IGameService
 
 	public IGame initFetch(String username);
 
-	public boolean checkCastDie(String username);
-
 	public int castDie(String username);
 }

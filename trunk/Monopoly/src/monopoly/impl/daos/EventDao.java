@@ -4,8 +4,12 @@ import monopoly.core.beans.IEventQueue;
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
+import monopoly.core.beans.event.IBuyProperty;
+import monopoly.core.beans.event.ICashBonusPassingStart;
 import monopoly.core.beans.event.ICastDie;
 import monopoly.core.beans.event.IEvent;
+import monopoly.core.beans.event.IGameStart;
+import monopoly.core.beans.event.IInitFetch;
 import monopoly.core.beans.event.IStepForward;
 import monopoly.core.daos.IEventDao;
 
@@ -26,20 +30,26 @@ public class EventDao extends BaseDao implements IEventDao
 		return eventQueue;
 	}
 
-	public IEvent createEvent(IEventQueue eventQueue, String clazz)
+	private void pushTo(IEvent event, IEventQueue eventQueue)
 	{
-		IEvent event = (IEvent) persistenceManager.newObject(clazz);
-		event.setEventQueue(eventQueue);
 		eventQueue.getEvents().add(event);
+	}
+
+	public IInitFetch createInitFetchEvent(IGame game)
+	{
+		IInitFetch event = (IInitFetch) persistenceManager
+				.newObject(INIT_FETCH_BEAN);
+		for (IUser user : game.getHost().getUsers())
+			pushTo(event, user.getEventQueue());
 		return event;
 	}
 
-	private ICastDie createCastDieEvent(IEventQueue eventQueue, IPlayer player)
+	public IGameStart createGameStartEvent(IGame game)
 	{
-		ICastDie event = (ICastDie) persistenceManager.newObject(CAST_DIE_BEAN);
-		event.setEventQueue(eventQueue);
-		eventQueue.getEvents().add(event);
-		event.setPlayer(player);
+		IGameStart event = (IGameStart) persistenceManager
+				.newObject(GAME_START_BEAN);
+		for (IUser user : game.getHost().getUsers())
+			pushTo(event, user.getEventQueue());
 		return event;
 	}
 
@@ -48,21 +58,40 @@ public class EventDao extends BaseDao implements IEventDao
 		ICastDie event = (ICastDie) persistenceManager.newObject(CAST_DIE_BEAN);
 		event.setPlayer(player);
 		game.getEvents().add(event);
-		for (IPlayer p : game.getPlayers())
-			createCastDieEvent(p.getUser().getEventQueue(), player);
+		for (IUser user : game.getHost().getUsers())
+			pushTo(event, user.getEventQueue());
 		return event;
 	}
 
-	public IStepForward createStepForwardEvent(IEventQueue eventQueue,
-			IPlayer player, int step)
+	public IStepForward createStepForwardEvent(IGame game, IPlayer player,
+			int step)
 	{
 		IStepForward event = (IStepForward) persistenceManager
 				.newObject(STEP_FORWARD_BEAN);
 		event.setPlayer(player);
 		event.setStep(step);
-		event.setEventQueue(eventQueue);
-		eventQueue.getEvents().add(event);
+		for (IUser user : game.getHost().getUsers())
+			pushTo(event, user.getEventQueue());
 		return event;
+	}
+
+	public ICashBonusPassingStart createCashBonusPassingStartEvent(IGame game,
+			IPlayer player, int cash)
+	{
+		ICashBonusPassingStart event = (ICashBonusPassingStart) persistenceManager
+				.newObject(CASH_BONUS_PASSING_START_BEAN);
+		event.setPlayer(player);
+		event.setCash(cash);
+		for (IUser user : game.getHost().getUsers())
+			pushTo(event, user.getEventQueue());
+		return event;
+	}
+
+	public IBuyProperty createBuyPropertyEvent(IGame game, IPlayer player,
+			int field, int cost)
+	{
+
+		return null;
 	}
 
 }

@@ -1,6 +1,7 @@
 package monopoly.impl.controllers;
 
 import monopoly.core.beans.IGame;
+import monopoly.core.services.IGameEventService;
 import monopoly.core.services.IGameService;
 import monopoly.impl.controllers.response.BaseResponse;
 
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class GameController extends BaseController
 {
-
 	@Autowired
 	private IGameService gameService;
+
+	@Autowired
+	private IGameEventService gameEventService;
 
 	private boolean checkUserAtInitStage(String username, String password,
 			Model model)
@@ -64,13 +67,15 @@ public class GameController extends BaseController
 		if (!checkUser(username, password, model))
 			return ERROR_PAGE;
 
-		if (!gameService.checkCastDie(username))
+		if (!gameEventService.checkCastDie(username))
 		{
 			model.addAttribute("message", "It's not your turn");
 			return ERROR_PAGE;
 		}
 
 		int step = gameService.castDie(username);
+
+		gameEventService.checkNextPlayer(username);
 
 		BaseResponse result = new BaseResponse();
 		result.put("message", "You cast a die with value " + step);

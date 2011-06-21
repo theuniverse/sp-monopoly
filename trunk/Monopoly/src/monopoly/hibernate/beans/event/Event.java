@@ -22,10 +22,6 @@ public abstract class Event extends BaseBean implements IEvent
 	@Basic
 	private String type;
 
-	@ManyToOne(targetEntity = EventQueue.class, cascade =
-	{ CascadeType.ALL })
-	private IEventQueue eventQueue;
-
 	public String getType()
 	{
 		return type;
@@ -34,16 +30,6 @@ public abstract class Event extends BaseBean implements IEvent
 	public void setType(String type)
 	{
 		this.type = type;
-	}
-
-	public IEventQueue getEventQueue()
-	{
-		return eventQueue;
-	}
-
-	public void setEventQueue(IEventQueue eventQueue)
-	{
-		this.eventQueue = eventQueue;
 	}
 
 	public abstract String toString();

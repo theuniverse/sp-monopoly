@@ -27,4 +27,13 @@ public interface IGame extends IBean
 	public List<IEvent> getEvents();
 
 	public void setEvents(List<IEvent> events);
+
+	public void setCashBonusPassingStart(int cashBonusPassingStart);
+
+	public int getCashBonusPassingStart();
+
+	public void setCurrentPlayer(IPlayer currentPlayer);
+
+	public IPlayer getCurrentPlayer();
+
 }

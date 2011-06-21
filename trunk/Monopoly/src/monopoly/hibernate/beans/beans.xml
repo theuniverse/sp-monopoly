@@ -26,5 +26,9 @@
 		scope="prototype" />
 	<bean id="stepForward" class="monopoly.hibernate.beans.event.StepForward"
 		scope="prototype" />
+	<bean id="cashBonusPassingStart" class="monopoly.hibernate.beans.event.CashBonusPassingStart"
+		scope="prototype" />
+	<bean id="buyProperty" class="monopoly.hibernate.beans.event.BuyProperty"
+		scope="prototype" />
 
 </beans>

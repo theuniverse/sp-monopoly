@@ -9,8 +9,4 @@ public interface IEvent extends IBean
 	public String getType();
 
 	public void setType(String type);
-
-	public IEventQueue getEventQueue();
-
-	public void setEventQueue(IEventQueue eventQueue);
 }
