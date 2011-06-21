@@ -1,5 +1,7 @@
 package monopoly.core.beans;
 
+import monopoly.core.beans.field.INormalField;
+
 import com.iiiss.spring.common.IBean;
 
 public interface IProperty extends IBean

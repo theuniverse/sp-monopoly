@@ -1,4 +1,6 @@
-package monopoly.core.beans;
+package monopoly.core.beans.field;
+
+import monopoly.core.beans.IProperty;
 
 public interface INormalField extends IField
 {

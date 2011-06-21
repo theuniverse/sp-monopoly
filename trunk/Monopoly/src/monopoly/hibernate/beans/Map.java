@@ -8,10 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import monopoly.core.beans.IField;
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IMap;
-import monopoly.core.beans.IStartField;
+import monopoly.core.beans.field.IField;
+import monopoly.core.beans.field.IStartField;
+import monopoly.hibernate.beans.field.Field;
+import monopoly.hibernate.beans.field.StartField;
 
 import com.iiiss.spring.common.BaseBean;
 

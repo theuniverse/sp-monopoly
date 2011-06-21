@@ -1,9 +1,9 @@
-package monopoly.hibernate.beans;
+package monopoly.hibernate.beans.field;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import monopoly.core.beans.IStartField;
+import monopoly.core.beans.field.IStartField;
 
 @Entity
 @DiscriminatorValue("StartField")

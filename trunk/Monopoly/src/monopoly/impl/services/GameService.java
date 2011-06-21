@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import monopoly.core.beans.IField;
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
-import monopoly.core.beans.INormalField;
 import monopoly.core.beans.IPlayer;
+import monopoly.core.beans.IProperty;
 import monopoly.core.beans.IUser;
+import monopoly.core.beans.field.IBankField;
+import monopoly.core.beans.field.IField;
+import monopoly.core.beans.field.INormalField;
 import monopoly.core.daos.IEventDao;
 import monopoly.core.daos.IGameDao;
 import monopoly.core.daos.IUserDao;
@@ -54,7 +56,7 @@ public class GameService implements IGameService
 		user.setHost(host);
 		return host;
 	}
-	
+
 	@Transactional
 	public ArrayList<IHost> list(String username)
 	{
@@ -235,6 +237,11 @@ public class GameService implements IGameService
 				eventDao.createCashBonusPassingStartEvent(game, player,
 						game.getCashBonusPassingStart());
 			}
+			/* see if the player passes a bank */
+			if (field instanceof IBankField)
+			{
+				eventDao.createBankServiceAskEvent(game, player);
+			}
 		}
 		field.getPlayers().add(player);
 		player.setField(field);
@@ -244,12 +251,100 @@ public class GameService implements IGameService
 		/* see if it's gonna happen something */
 		if (field instanceof INormalField)
 		{
-			if (((INormalField) field).getProperty().getPlayer() != null)
+			INormalField normalField = (INormalField) field;
+			if (normalField.getProperty().getPlayer() == null)
 			{
-
+				eventDao.createBuyPropertyAskEvent(game, player, normalField,
+						normalField.getProperty().getValue());
+			}
+			else
+			{
+				Long tax = Math.min(player.getCash(), (long) (normalField
+						.getProperty().getValue() * 0.2));
+				IPlayer landlord = normalField.getProperty().getPlayer();
+				if (landlord != player)
+				{
+					if (player.getCash() >= normalField.getProperty()
+							.getValue())
+					{
+						player.setCash(player.getCash() - tax);
+						landlord.setCash(landlord.getCash() + tax);
+					}
+					eventDao.createPayTaxEvent(game, player, landlord, tax);
+				}
+				else
+				{
+					// upgrade property
+				}
 			}
 		}
 
 		return step;
+	}
+
+	@Transactional
+	public boolean buyProperty(String username)
+	{
+		IPlayer player = userDao.getUserByUsername(username).getPlayer();
+		IGame game = player.getGame();
+
+		if (!(player.getField() instanceof INormalField))
+		{
+			System.out.println("Buy Property Failed. Not buyable field");
+			return false;
+		}
+
+		IProperty property = ((INormalField) player.getField()).getProperty();
+		property.setPlayer(player);
+
+		if (player.getCash() < property.getValue())
+		{
+			System.out.println("Buy Property Failed. Not enough cash");
+			return false;
+		}
+		player.setCash(player.getCash() - property.getValue());
+
+		eventDao.createBuyPropertEvent(game, player, player.getField(),
+				property.getValue());
+
+		return true;
+	}
+
+	@Transactional
+	public boolean save(String username, Long amount)
+	{
+		IPlayer player = userDao.getUserByUsername(username).getPlayer();
+		IGame game = player.getGame();
+
+		if (player.getCash() < amount)
+		{
+			System.out.println("Save Failed. Not enough cash");
+			return false;
+		}
+		player.setCash(player.getCash() - amount);
+		player.setSaving(player.getSaving() + amount);
+
+		eventDao.createBankServiceSaveEvent(game, player, amount);
+
+		return true;
+	}
+
+	@Transactional
+	public boolean withdraw(String username, Long amount)
+	{
+		IPlayer player = userDao.getUserByUsername(username).getPlayer();
+		IGame game = player.getGame();
+
+		if (player.getSaving() < amount)
+		{
+			System.out.println("Save Failed. Not enough saving");
+			return false;
+		}
+		player.setCash(player.getCash() + amount);
+		player.setSaving(player.getSaving() - amount);
+
+		eventDao.createBankServiceWithdrawEvent(game, player, amount);
+
+		return true;
 	}
 }

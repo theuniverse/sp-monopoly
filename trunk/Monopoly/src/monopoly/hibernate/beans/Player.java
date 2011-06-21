@@ -10,11 +10,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import monopoly.core.beans.IField;
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IProperty;
 import monopoly.core.beans.IUser;
+import monopoly.core.beans.field.IField;
+import monopoly.hibernate.beans.field.Field;
 
 import com.iiiss.spring.common.BaseBean;
 

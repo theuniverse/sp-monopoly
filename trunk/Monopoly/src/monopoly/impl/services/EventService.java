@@ -41,8 +41,9 @@ public class EventService implements IEventService
 			return null;
 
 		List<IEvent> clone = new ArrayList<IEvent>();
-		clone.addAll(user.getEventQueue().getEvents());
-		eventDao.createEventQueue(user);
+		List<IEvent> events = user.getEventQueue().getEvents();
+		clone.addAll(events);
+		user.getEventQueue().getEvents().clear();
 
 		return clone;
 	}

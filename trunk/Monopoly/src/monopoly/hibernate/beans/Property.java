@@ -5,9 +5,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
-import monopoly.core.beans.INormalField;
 import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IProperty;
+import monopoly.core.beans.field.INormalField;
+import monopoly.hibernate.beans.field.NormalField;
 
 import com.iiiss.spring.common.BaseBean;
 

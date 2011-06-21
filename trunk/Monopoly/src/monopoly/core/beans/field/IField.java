@@ -1,6 +1,9 @@
-package monopoly.core.beans;
+package monopoly.core.beans.field;
 
 import java.util.List;
+
+import monopoly.core.beans.IMap;
+import monopoly.core.beans.IPlayer;
 
 import com.iiiss.spring.common.IBean;
 
