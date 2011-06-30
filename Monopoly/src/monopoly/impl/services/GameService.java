@@ -1,6 +1,8 @@
 package monopoly.impl.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +20,7 @@ import monopoly.core.daos.IGameDao;
 import monopoly.core.daos.IUserDao;
 import monopoly.core.services.IGameService;
 
-public class GameService implements IGameService
-{
+public class GameService implements IGameService {
 	@Autowired
 	private IGameDao gameDao;
 
@@ -29,24 +30,20 @@ public class GameService implements IGameService
 	@Autowired
 	private IEventDao eventDao;
 
-	public void setGameDao(IGameDao gameDao)
-	{
+	public void setGameDao(IGameDao gameDao) {
 		this.gameDao = gameDao;
 	}
 
-	public void setUserDao(IUserDao userDao)
-	{
+	public void setUserDao(IUserDao userDao) {
 		this.userDao = userDao;
 	}
 
-	public void setEventDao(IEventDao eventDao)
-	{
+	public void setEventDao(IEventDao eventDao) {
 		this.eventDao = eventDao;
 	}
 
 	@Transactional
-	public IHost create(String username)
-	{
+	public IHost create(String username) {
 		IUser user = userDao.getUserByUsername(username);
 		if (user == null)
 			return null;
@@ -58,8 +55,7 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public ArrayList<IHost> list(String username)
-	{
+	public ArrayList<IHost> list(String username) {
 		IUser user = userDao.getUserByUsername(username);
 		if (user == null)
 			return null;
@@ -70,8 +66,7 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public String join(String username, Long hostid)
-	{
+	public String join(String username, Long hostid) {
 		IUser user = userDao.getUserByUsername(username);
 		if (user == null)
 			return "Unexpected error";
@@ -92,8 +87,7 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public String start(String username, Long hostid)
-	{
+	public String start(String username, Long hostid) {
 		IUser user = userDao.getUserByUsername(username);
 		if (user == null)
 			return "Unexpected error";
@@ -116,10 +110,8 @@ public class GameService implements IGameService
 			eventDao.createEventQueue(iterator);
 		eventDao.createInitFetchEvent(game);
 
-		String colors[] =
-		{ "RED", "BLUE", "YELLOW", "GREEN" };
-		for (int i = 0; i < host.getUsers().size(); i++)
-		{
+		String colors[] = { "RED", "BLUE", "YELLOW", "GREEN" };
+		for (int i = 0; i < host.getUsers().size(); i++) {
 			IUser iterator = host.getUsers().get(i);
 			IPlayer player = gameDao.createPlayer(iterator, game);
 			player.setCash(new Long(2000));
@@ -133,8 +125,7 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public boolean checkUserAtInitStage(String username, String password)
-	{
+	public boolean checkUserAtInitStage(String username, String password) {
 		IUser user = userDao.getUserByUsername(username);
 		if (user == null)
 			return false;
@@ -163,8 +154,7 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public boolean checkUser(String username, String password)
-	{
+	public boolean checkUser(String username, String password) {
 		IUser user = userDao.getUserByUsername(username);
 		if (user == null)
 			return false;
@@ -193,8 +183,7 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public IGame initFetch(String username)
-	{
+	public IGame initFetch(String username) {
 		IUser user = userDao.getUserByUsername(username);
 		IHost host = user.getHost();
 		IGame game = host.getGame();
@@ -206,8 +195,7 @@ public class GameService implements IGameService
 			if (!p.isInitialized())
 				allReady = false;
 
-		if (allReady)
-		{
+		if (allReady) {
 			game.setStarted(true);
 			eventDao.createGameStartEvent(game);
 			eventDao.createCastDieEvent(game, game.getPlayers().get(0));
@@ -218,28 +206,24 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public int castDie(String username)
-	{
+	public int castDie(String username) {
 		IPlayer player = userDao.getUserByUsername(username).getPlayer();
 		IGame game = player.getGame();
 
 		int step = (int) (Math.random() * 6) + 1;
 		player.getField().getPlayers().remove(player);
 		IField field = player.getField();
-		for (int i = 0; i < step; i++)
-		{
+		for (int i = 0; i < step; i++) {
 			field = field.getNext();
 			/* see if the player passes the start point */
-			if (field == game.getMap().getStartField())
-			{
+			if (field == game.getMap().getStartField()) {
 				player.setCash(player.getCash()
 						+ game.getCashBonusPassingStart());
-				eventDao.createCashBonusPassingStartEvent(game, player,
-						game.getCashBonusPassingStart());
+				eventDao.createCashBonusPassingStartEvent(game, player, game
+						.getCashBonusPassingStart());
 			}
 			/* see if the player passes a bank */
-			if (field instanceof IBankField)
-			{
+			if (field instanceof IBankField) {
 				eventDao.createBankServiceAskEvent(game, player);
 			}
 		}
@@ -249,31 +233,23 @@ public class GameService implements IGameService
 		eventDao.createStepForwardEvent(game, player, step);
 
 		/* see if it's gonna happen something */
-		if (field instanceof INormalField)
-		{
+		if (field instanceof INormalField) {
 			INormalField normalField = (INormalField) field;
-			if (normalField.getProperty().getPlayer() == null)
-			{
+			if (normalField.getProperty().getPlayer() == null) {
 				eventDao.createBuyPropertyAskEvent(game, player, normalField,
 						normalField.getProperty().getValue());
-			}
-			else
-			{
+			} else {
 				Long tax = Math.min(player.getCash(), (long) (normalField
 						.getProperty().getValue() * 0.2));
 				IPlayer landlord = normalField.getProperty().getPlayer();
-				if (landlord != player)
-				{
+				if (landlord != player) {
 					if (player.getCash() >= normalField.getProperty()
-							.getValue())
-					{
+							.getValue()) {
 						player.setCash(player.getCash() - tax);
 						landlord.setCash(landlord.getCash() + tax);
 					}
 					eventDao.createPayTaxEvent(game, player, landlord, tax);
-				}
-				else
-				{
+				} else {
 					// upgrade property
 				}
 			}
@@ -283,13 +259,11 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public boolean buyProperty(String username)
-	{
+	public boolean buyProperty(String username) {
 		IPlayer player = userDao.getUserByUsername(username).getPlayer();
 		IGame game = player.getGame();
 
-		if (!(player.getField() instanceof INormalField))
-		{
+		if (!(player.getField() instanceof INormalField)) {
 			System.out.println("Buy Property Failed. Not buyable field");
 			return false;
 		}
@@ -297,8 +271,7 @@ public class GameService implements IGameService
 		IProperty property = ((INormalField) player.getField()).getProperty();
 		property.setPlayer(player);
 
-		if (player.getCash() < property.getValue())
-		{
+		if (player.getCash() < property.getValue()) {
 			System.out.println("Buy Property Failed. Not enough cash");
 			return false;
 		}
@@ -311,13 +284,11 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public boolean save(String username, Long amount)
-	{
+	public boolean save(String username, Long amount) {
 		IPlayer player = userDao.getUserByUsername(username).getPlayer();
 		IGame game = player.getGame();
 
-		if (player.getCash() < amount)
-		{
+		if (player.getCash() < amount) {
 			System.out.println("Save Failed. Not enough cash");
 			return false;
 		}
@@ -330,13 +301,11 @@ public class GameService implements IGameService
 	}
 
 	@Transactional
-	public boolean withdraw(String username, Long amount)
-	{
+	public boolean withdraw(String username, Long amount) {
 		IPlayer player = userDao.getUserByUsername(username).getPlayer();
 		IGame game = player.getGame();
 
-		if (player.getSaving() < amount)
-		{
+		if (player.getSaving() < amount) {
 			System.out.println("Save Failed. Not enough saving");
 			return false;
 		}
@@ -346,5 +315,17 @@ public class GameService implements IGameService
 		eventDao.createBankServiceWithdrawEvent(game, player, amount);
 
 		return true;
+	}
+
+	@Transactional
+	public List<IUser> getUsersOfHost(Long hostid) {
+		List<IUser> users = new ArrayList<IUser>();
+		List<IHost> hosts = gameDao.getHosts();
+		for (IHost host : hosts)
+			if (host.getKey() == hostid) {
+				users.addAll(host.getUsers());
+				return users;
+			}
+		return Collections.emptyList();
 	}
 }
