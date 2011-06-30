@@ -13,8 +13,12 @@ import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IProperty;
 import monopoly.core.beans.IUser;
 import monopoly.core.beans.field.IBankField;
+import monopoly.core.beans.field.IChanceField;
 import monopoly.core.beans.field.IField;
+import monopoly.core.beans.field.IJailField;
+import monopoly.core.beans.field.INewsField;
 import monopoly.core.beans.field.INormalField;
+import monopoly.core.beans.field.IRailwayStationField;
 import monopoly.core.daos.IEventDao;
 import monopoly.core.daos.IGameDao;
 import monopoly.core.daos.IUserDao;
@@ -251,8 +255,17 @@ public class GameService implements IGameService {
 					eventDao.createPayTaxEvent(game, player, landlord, tax);
 				} else {
 					// upgrade property
+					eventDao.createBuyPropertyAskEvent(game, player, normalField, normalField.getProperty().getValue());			
 				}
 			}
+		}else if(field instanceof IRailwayStationField){
+			
+		}else if(field instanceof IJailField){
+			
+		}else if(field instanceof INewsField){
+			
+		}else if(field instanceof IChanceField){
+			
 		}
 
 		return step;

@@ -25,6 +25,8 @@
 		scope="prototype" />
 	<bean id="railwayStationField" class="monopoly.hibernate.beans.field.RailwayStationField"
 		scope="prototype" />
+	<bean id="chanceField" class="monopoly.hibernate.beans.field.ChanceField"
+		scope="prototype" />
 
 	<bean id="eventQueue" class="monopoly.hibernate.beans.EventQueue"
 		scope="prototype" />
