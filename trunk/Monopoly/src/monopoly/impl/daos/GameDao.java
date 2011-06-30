@@ -18,6 +18,7 @@ import monopoly.core.beans.field.IField;
 import monopoly.core.beans.field.IJailField;
 import monopoly.core.beans.field.INewsField;
 import monopoly.core.beans.field.INormalField;
+import monopoly.core.beans.field.IParkField;
 import monopoly.core.beans.field.IRailwayStationField;
 import monopoly.core.beans.field.IStartField;
 import monopoly.core.daos.IGameDao;
@@ -115,28 +116,53 @@ public class GameDao extends BaseDao implements IGameDao
 				.newObject(RAILWAY_STATION_FIELD_BEAN);
 		railwayStation1.setNextStop(railwayStation2);
 		railwayStation2.setNextStop(railwayStation1);
+		
+		IBankField bankField1 = (IBankField) persistenceManager
+			.newObject(BANK_FIELD_BEAN);
+		
+		IBankField bankField2 = (IBankField) persistenceManager
+		.newObject(BANK_FIELD_BEAN);
+
+		IParkField parkField = (IParkField) persistenceManager
+			.newObject(PARK_FIELD_BEAN);
+
+		INewsField newsField = (INewsField) persistenceManager
+			.newObject(NEWS_FIELD_BEAN);	
+
+		IJailField jailField = (IJailField) persistenceManager
+			.newObject(JAIL_FIELD_BEAN);
+		
+		push(createNormalField(), map);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
 		push(railwayStation1, map);
 		push(createNormalField(), map);
 		push(createNormalField(), map);
 		push(createNormalField(), map);
+		push(parkField, map);
 		push(createNormalField(), map);
 		push(createNormalField(), map);
+		push(createNormalField(), map);
+		push(bankField1, map);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
+		push(newsField, map);
 		push(createNormalField(), map);
 		push(createNormalField(), map);
 		push(createNormalField(), map);
 		push(railwayStation2, map);
-
-		IBankField bankField = (IBankField) persistenceManager
-				.newObject(BANK_FIELD_BEAN);
-		push(bankField, map);
-
-		INewsField newsField = (INewsField) persistenceManager
-				.newObject(NEWS_FIELD_BEAN);
-		push(newsField, map);
-
-		IJailField jailField = (IJailField) persistenceManager
-				.newObject(JAIL_FIELD_BEAN);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
 		push(jailField, map);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
+		push(bankField2, map);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
+		push(createNormalField(), map);
 
 		map.getStartField().getPlayers().addAll(game.getPlayers());
 		for (IPlayer player : game.getPlayers())
