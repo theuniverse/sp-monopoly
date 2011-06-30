@@ -5,9 +5,13 @@ import java.util.List;
 
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
+import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
+import monopoly.core.beans.field.IField;
 
 public interface IGameService {
+	public void initInfo(String username, List<IPlayer>  players, List<IField> fields);
+	
 	public IHost create(String username);
 
 	public String join(String username, Long hostid);

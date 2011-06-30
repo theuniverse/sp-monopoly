@@ -1,8 +1,14 @@
 package monopoly.impl.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import monopoly.core.beans.IGame;
+import monopoly.core.beans.IPlayer;
+import monopoly.core.beans.field.IField;
 import monopoly.core.services.IGameEventService;
 import monopoly.core.services.IGameService;
+import monopoly.impl.controllers.json.JsonInitInfo;
 import monopoly.impl.controllers.response.BaseResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +61,14 @@ public class GameController extends BaseController
 		IGame game = gameService.initFetch(username);
 
 		BaseResponse result = new BaseResponse();
+		
+		List<IField> fields = new ArrayList<IField>();
+		List<IPlayer> players = new ArrayList<IPlayer>();
+		
+		gameService.initInfo(username, players, fields);
+		
+		JsonInitInfo jii = new JsonInitInfo(game.getHost().getKey(), players, fields); 
+		
 		result.put("Test", game.getPlayers().size());
 		model.addAttribute("result", result);
 		return RESULT_PAGE;
