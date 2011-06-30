@@ -45,6 +45,17 @@ public class GameService implements IGameService {
 	public void setEventDao(IEventDao eventDao) {
 		this.eventDao = eventDao;
 	}
+	
+	@Transactional
+	public void initInfo(String username, List<IPlayer>  players, List<IField> fields){
+		IUser user = (IUser) userDao.getUserByUsername(username);
+		
+		IGame game = user.getPlayer().getGame();
+		
+		players.addAll(game.getPlayers());
+		
+		fields.addAll(game.getMap().getFields());
+	}
 
 	@Transactional
 	public IHost create(String username) {

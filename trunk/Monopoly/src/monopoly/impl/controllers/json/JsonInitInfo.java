@@ -3,6 +3,7 @@ package monopoly.impl.controllers.json;
 import java.util.ArrayList;
 import java.util.List;
 
+import monopoly.core.beans.IPlayer;
 import monopoly.core.beans.IUser;
 import monopoly.core.beans.field.IBankField;
 import monopoly.core.beans.field.IField;
@@ -25,10 +26,10 @@ public class JsonInitInfo extends JsonObject {
 	private List<String> players = new ArrayList<String>();
 	private List<Integer> fields = new ArrayList<Integer>();
 
-	public JsonInitInfo(long hostid, List<IUser> players, List<IField> fields) {
+	public JsonInitInfo(long hostid, List<IPlayer> players, List<IField> fields) {
 		this.hostid = hostid;
-		for (IUser player : players)
-			this.players.add(player.getUsername());
+		for (IPlayer player : players)
+			this.players.add(player.getColor());
 		for (IField field : fields) {
 			if (field instanceof IStartField)
 				this.fields.add(START_FIELD);
