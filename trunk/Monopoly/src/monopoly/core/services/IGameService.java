@@ -1,12 +1,13 @@
 package monopoly.core.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import monopoly.core.beans.IGame;
 import monopoly.core.beans.IHost;
+import monopoly.core.beans.IUser;
 
-public interface IGameService
-{
+public interface IGameService {
 	public IHost create(String username);
 
 	public String join(String username, Long hostid);
@@ -28,4 +29,6 @@ public interface IGameService
 	public boolean save(String username, Long amount);
 
 	public boolean withdraw(String username, Long amount);
+
+	public List<IUser> getUsersOfHost(Long hostid);
 }
